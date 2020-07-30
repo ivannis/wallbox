@@ -6,6 +6,7 @@ namespace Wallbox\UI\Console\BatchProcessing;
 
 use Common\Application\MessageBus;
 use Doblio\Core\Messaging\Annotation\CommandHandler;
+use Doblio\Core\Messaging\Stamp\Command\AsyncStamp;
 use Doblio\Domain\Exception\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
@@ -59,11 +60,21 @@ class UserLoader
         $records = $stmt->process($csv, $header);
         if (count($records) === $command->limit()) {
             // load next batch
-            $this->bus->dispatch(new BatchLoadFromCSV(
-                $command->file(),
-                $command->offset() + $command->limit(),
-                $command->limit()
-            ));
+            $stamps = [];
+            if ($command->async()) {
+                $stamps[] = new AsyncStamp($command->delay());
+            }
+
+            $this->bus->dispatch(
+                new BatchLoadFromCSV(
+                    $command->file(),
+                    $command->offset() + $command->limit(),
+                    $command->limit(),
+                    $command->async(),
+                    $command->delay()
+                ),
+                ...$stamps
+            );
         }
 
         foreach ($records as $record) {

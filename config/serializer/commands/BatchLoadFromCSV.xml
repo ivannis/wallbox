@@ -4,6 +4,8 @@
         <attribute name="file" serialized-name="file" type="string" />
         <attribute name="offset" serialized-name="offset" type="integer" />
         <attribute name="limit" serialized-name="limit" type="integer" />
+        <attribute name="async" serialized-name="async" type="bool" />
+        <attribute name="delay" serialized-name="delay" type="integer" />
     </class>
 
 </serializer>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Wallbox\UI\Console;
 
 use Common\Application\MessageBus;
+use Doblio\Core\Messaging\Stamp\Command\AsyncStamp;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Contract\ConfigInterface;
@@ -34,20 +35,36 @@ class ImportUsersCommand extends HyperfCommand
     public function handle()
     {
         $this->line('Loading users csv file ...', 'info');
+
         $limit = (int) $this->input->getOption('limit');
+        $async = (bool) $this->input->getOption('async');
+        $delay = (int) $this->input->getOption('delay');
+
         file_put_contents($this->destination, file_get_contents($this->source));
 
-        $this->bus->dispatch(new BatchLoadFromCSV(
-            $this->destination,
-            0,
-            $limit
-        ));
+        $stamps = [];
+        if ($async) {
+            $stamps[] = new AsyncStamp($delay);
+        }
+
+        $this->bus->dispatch(
+            new BatchLoadFromCSV(
+                $this->destination,
+                0,
+                $limit,
+                $async,
+                $delay
+            ),
+            ...$stamps
+        );
     }
 
     protected function getOptions()
     {
         return [
-            ['limit', 'l', InputOption::VALUE_OPTIONAL, 'Number of users to load in each batch process', 25]
+            ['limit', 'l', InputOption::VALUE_OPTIONAL, 'Number of users to load in each batch process', 25],
+            ['async', 'a', InputOption::VALUE_OPTIONAL, 'The batch processing should be async?', true],
+            ['delay', 'd', InputOption::VALUE_OPTIONAL, 'The delay between each batch processing', 0],
         ];
     }
 }
