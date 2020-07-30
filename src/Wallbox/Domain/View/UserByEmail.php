@@ -35,4 +35,9 @@ class UserByEmail implements View
     {
         return $this->email;
     }
+
+    public function setEmail(EmailAddress $email): void
+    {
+        $this->email = $email;
+    }
 }

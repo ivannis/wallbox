@@ -98,4 +98,34 @@ class User implements View
     {
         return $this->activatedAt;
     }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setSurname(string $surname): void
+    {
+        $this->surname = $surname;
+    }
+
+    public function setEmail(EmailAddress $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function setCountry(CountryCode $country): void
+    {
+        $this->country = $country;
+    }
+
+    public function setChargerId(int $chargerId): void
+    {
+        $this->chargerId = $chargerId;
+    }
+
+    public function setUpdatedAt(DateTime $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

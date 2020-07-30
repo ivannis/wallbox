@@ -1,0 +1,9 @@
+<serializer>
+
+    <class name="Wallbox\UI\Console\Command\BatchLoadFromCSV">
+        <attribute name="file" serialized-name="file" type="string" />
+        <attribute name="offset" serialized-name="offset" type="integer" />
+        <attribute name="limit" serialized-name="limit" type="integer" />
+    </class>
+
+</serializer>

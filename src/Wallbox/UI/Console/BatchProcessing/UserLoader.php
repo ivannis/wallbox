@@ -6,6 +6,7 @@ namespace Wallbox\UI\Console\BatchProcessing;
 
 use Common\Application\MessageBus;
 use Doblio\Core\Messaging\Annotation\CommandHandler;
+use Doblio\Domain\Exception\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Psr\Log\LoggerInterface;
@@ -67,20 +68,37 @@ class UserLoader
 
         foreach ($records as $record) {
             if ($this->validator->isValid($record)) {
-                if ($this->service->userAlreadyExists((int) $record['id'])) {
+                try {
+                    if ($user = $this->service->findOneUserById((int) $record['id'])) {
+                        $this->service->update(
+                            $user->id()->toNative(),
+                            (int) $record['id'],
+                            $record['name'],
+                            $record['surname'],
+                            $record['email'],
+                            $record['country'],
+                            (int) $record['chargerId'],
+                        );
+                    } else {
+                        $this->service->create(
+                            UserId::next()->toNative(),
+                            (int) $record['id'],
+                            $record['name'],
+                            $record['surname'],
+                            $record['email'],
+                            $record['country'],
+                            (int) $record['chargerId'],
+                            $record['createAt'],
+                            $record['activateAt'],
+                            );
+                    }
+                } catch (Exception $e) {
+                    $context = array_merge([
+                        'code' => $e->getCode(),
+                        'message' => $e->getMessage()
+                    ], $this->loggerContext);
 
-                } else {
-                    $this->service->create(
-                        UserId::next()->toNative(),
-                        (int) $record['id'],
-                        $record['name'],
-                        $record['surname'],
-                        $record['email'],
-                        $record['country'],
-                        (int) $record['chargerId'],
-                        $record['createAt'],
-                        $record['activateAt'],
-                    );
+                    $this->logger->error('Error {code}. {message}', $context);
                 }
             } else {
                 $context = array_merge([

@@ -6,9 +6,9 @@ namespace Wallbox\Domain\Exception;
 
 use Doblio\Domain\Exception\LogicException;
 
-class UserAlreadyExists extends LogicException
+class ChargerAlreadyExists extends LogicException
 {
-    public function __construct(string $message = 'User already exists', \Throwable $previous = null)
+    public function __construct(string $message = 'Charger already exists', \Throwable $previous = null)
     {
         parent::__construct($message, $previous);
     }

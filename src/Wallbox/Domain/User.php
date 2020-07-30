@@ -12,7 +12,9 @@ use Doblio\Domain\AggregateRoot;
 use Doblio\Domain\AggregateRootTrait;
 use Doblio\Domain\Behavior\Timestampable;
 use Wallbox\Domain\Command\CreateUser;
+use Wallbox\Domain\Command\UpdateUser;
 use Wallbox\Domain\Event\UserCreated;
+use Wallbox\Domain\Event\UserUpdated;
 
 class User implements AggregateRoot
 {
@@ -47,6 +49,23 @@ class User implements AggregateRoot
         );
     }
 
+    /**
+     * @CommandHandler
+     */
+    public function update(UpdateUser $command)
+    {
+        $this->recordThat(
+            new UserUpdated(
+                $command->id(),
+                $command->name(),
+                $command->surname(),
+                $command->email(),
+                $command->country(),
+                $command->chargerId()
+            )
+        );
+    }
+
     public function id(): UserId
     {
         return $this->id;
@@ -65,5 +84,16 @@ class User implements AggregateRoot
         $this->createdAt = $event->createdAt();
         $this->updatedAt = $event->createdAt();
         $this->activatedAt = $event->activatedAt();
+    }
+
+    private function whenUserUpdated(UserUpdated $event)
+    {
+        $this->name = $event->name();
+        $this->surname = $event->surname();
+        $this->email = $event->email();
+        $this->country = $event->country();
+        $this->chargerId = $event->chargerId();
+
+        $this->updatedAt = DateTime::now();
     }
 }
