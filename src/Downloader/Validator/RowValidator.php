@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Wallbox\UI\Console\Validator;
+namespace Downloader\Validator;
 
 use Common\Infrastructure\Hyperf\Validation\Validator;
 use Doblio\Core\ValueObject\Geography\CountryCode;
 
-class UserValidator extends Validator
+class RowValidator extends Validator
 {
     /**
      * Get the validation rules that apply to the request.

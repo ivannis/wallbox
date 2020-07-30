@@ -15,5 +15,3 @@ Feature: Index
         "version": "Wallbox API version 1.0.0"
       }
     """
-    And print last response
-    And print last response headers

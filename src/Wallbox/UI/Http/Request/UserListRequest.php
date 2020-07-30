@@ -7,7 +7,7 @@ namespace Wallbox\UI\Http\Request;
 use Doblio\Core\ValueObject\Geography\CountryCode;
 use Hyperf\Validation\Request\FormRequest;
 
-class UsersRequest extends FormRequest
+class UserListRequest extends FormRequest
 {
     public function authorize(): bool
     {

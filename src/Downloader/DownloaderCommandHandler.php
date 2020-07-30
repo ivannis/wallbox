@@ -2,26 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Wallbox\UI\Console\BatchProcessing;
+namespace Downloader;
 
-use Common\Application\MessageBus;
 use Doblio\Core\Messaging\Annotation\CommandHandler;
+use Doblio\Core\Messaging\MessageBus;
 use Doblio\Core\Messaging\Stamp\Command\AsyncStamp;
 use Doblio\Domain\Exception\Exception;
+use Downloader\Command\DownloadCSVFile;
+use Downloader\Command\LoadBatchFromCSV;
+use Downloader\Event\CSVFileCreated;
+use Downloader\Validator\RowValidator;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Psr\Log\LoggerInterface;
 use Wallbox\Application\UserService;
 use Wallbox\Domain\UserId;
-use Wallbox\UI\Console\Command\BatchLoadFromCSV;
-use Wallbox\UI\Console\Validator\UserValidator;
 
-class UserLoader
+class DownloaderCommandHandler
 {
     private MessageBus $bus;
     private UserService $service;
-    private UserValidator $validator;
+    private RowValidator $validator;
     private LoggerInterface $logger;
+    private string $destination;
     private array $loggerContext = [
         'component' => 'batch-processing'
     ];
@@ -29,19 +32,35 @@ class UserLoader
     public function __construct(
         MessageBus $bus,
         UserService $service,
-        UserValidator $validator,
+        RowValidator $validator,
         LoggerInterface $logger
     ) {
         $this->bus = $bus;
         $this->service = $service;
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->destination = BASE_PATH .'/storage/csv/users.csv';
     }
 
     /**
      * @CommandHandler
      */
-    public function whenBatchLoadFromCSV(BatchLoadFromCSV $command)
+    public function downloadCSVFile(DownloadCSVFile $command)
+    {
+        file_put_contents($this->destination, file_get_contents($command->url()));
+
+        $this->bus->dispatch(new CSVFileCreated(
+            $this->destination,
+            $command->limit(),
+            $command->async(),
+            $command->delay()
+        ));
+    }
+
+    /**
+     * @CommandHandler
+     */
+    public function loadBatchFromCSV(LoadBatchFromCSV $command)
     {
         $context = array_merge([
             'from' => $command->offset(),
@@ -66,7 +85,7 @@ class UserLoader
             }
 
             $this->bus->dispatch(
-                new BatchLoadFromCSV(
+                new LoadBatchFromCSV(
                     $command->file(),
                     $command->offset() + $command->limit(),
                     $command->limit(),

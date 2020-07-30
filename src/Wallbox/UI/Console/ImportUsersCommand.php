@@ -4,58 +4,41 @@ declare(strict_types=1);
 
 namespace Wallbox\UI\Console;
 
-use Common\Application\MessageBus;
-use Doblio\Core\Messaging\Stamp\Command\AsyncStamp;
 use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Command as HyperfCommand;
 use Hyperf\Contract\ConfigInterface;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Wallbox\UI\Console\Command\BatchLoadFromCSV;
+use Downloader\DownloaderService;
 
 /**
  * @Command
  */
 class ImportUsersCommand extends HyperfCommand
 {
-    protected ContainerInterface $container;
-    protected MessageBus $bus;
+    private DownloaderService $service;
     private string $source;
-    private string $destination;
 
-    public function __construct(MessageBus $bus, ConfigInterface $config)
+    public function __construct(DownloaderService $service, ConfigInterface $config)
     {
-        $this->bus = $bus;
+        $this->service = $service;
         $this->source = $config->get('csv_url');
-        $this->destination = BASE_PATH .'/storage/csv/users.csv';
 
         parent::__construct('import:users');
     }
 
     public function handle()
     {
-        $this->line('Loading users csv file ...', 'info');
+        $this->line('Loading users from csv file ...', 'info');
 
         $limit = (int) $this->input->getOption('limit');
         $async = (bool) $this->input->getOption('async');
         $delay = (int) $this->input->getOption('delay');
 
-        file_put_contents($this->destination, file_get_contents($this->source));
-
-        $stamps = [];
-        if ($async) {
-            $stamps[] = new AsyncStamp($delay);
-        }
-
-        $this->bus->dispatch(
-            new BatchLoadFromCSV(
-                $this->destination,
-                0,
-                $limit,
-                $async,
-                $delay
-            ),
-            ...$stamps
+        $this->service->download(
+            $this->source,
+            $limit,
+            $async,
+            $delay
         );
     }
 

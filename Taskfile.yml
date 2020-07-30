@@ -21,6 +21,7 @@ tasks:
     ignore_error: true
 
   coverage:
+    deps: [behat]
     cmds:
       - bin/cov merge runtime/coverage --html runtime/coverage/html
       - cp test/Resource/coverage.css runtime/coverage/html/_css/custom.css

@@ -5,7 +5,7 @@ default:
             target_directory: 'runtime/coverage'
 
     suites:
-        seat4:
+        wallbox:
             coverage_enabled: true
             paths: ['%paths.base%/test/Functional/Features']
             contexts:

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Application;
 
 use Doblio\Core\Messaging\Command\Command;
+use Doblio\Core\Messaging\Event\Event;
 use Doblio\Core\Messaging\Query\Query;
 use Doblio\Core\Messaging\Stamp\Query\ResponseStamp;
 use Doblio\Core\Messaging\Stamp\Stamp;
@@ -22,6 +23,11 @@ class MessageBus
     public function dispatch(Command $command, Stamp ...$stamps)
     {
         $this->bus->dispatch($command, ...$stamps);
+    }
+
+    public function fire(Event $event, Stamp ...$stamps)
+    {
+        $this->bus->dispatch($event, ...$stamps);
     }
 
     public function execute(Query $query, Stamp ...$stamps)

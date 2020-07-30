@@ -6,13 +6,9 @@ config:
       arrivalRate: 10
 
 scenarios:
-  - name: "Create driver load test"
+  - name: "Api home load test"
     flow:
-      - function: "driverFixtures"
-      - post:
-          url: "/graphql"
-          json:
-            query: "mutation{\n registerDriver(driverId: \"{{ uuid }}\", phoneNumber: \"{{ phone }}\", countryCode: \"ES\")\n}"
-            variables: {}
+      - get:
+          url: "/"
 
             

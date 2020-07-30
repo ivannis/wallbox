@@ -76,6 +76,7 @@
     "autoload": {
         "psr-4": {
             "Common\\": "src/Common/",
+            "Downloader\\": "src/Downloader/",
             "Wallbox\\": "src/Wallbox/"
         },
         "files": []

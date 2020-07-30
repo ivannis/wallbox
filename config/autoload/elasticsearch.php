@@ -54,10 +54,7 @@ return [
 
     'connections' => [
         'default' => array_merge($options, [
-            'indices' => ['seat4_user', 'seat4_passenger', 'seat4_driver'],
-        ]),
-        'securitas' => array_merge($options, [
-            'indices' => ['securitas_user_by_phone'],
+            'indices' => ['wallbox_user'],
         ]),
     ],
 
@@ -75,7 +72,7 @@ return [
     */
 
     'indices' => [
-        'seat4_user' => [
+        'wallbox_user' => [
             'settings' => [
                 'number_of_shards' => 1,
                 'number_of_replicas' => 0,
@@ -87,136 +84,13 @@ return [
             ],
             'mappings' => [
                 'properties' => [
-                    'first_name' => [
+                    'name' => [
                         'type' => 'keyword'
                     ],
-                    'last_name' => [
-                        'type' => 'keyword'
-                    ],
-                    'phone_number' => [
+                    'surname' => [
                         'type' => 'keyword'
                     ],
                     'country' => [
-                        'type' => 'keyword'
-                    ],
-                    'enabled' => [
-                        'type' => 'boolean'
-                    ],
-                    'verified' => [
-                        'type' => 'boolean'
-                    ],
-                    'roles' => [
-                        'type' => 'keyword'
-                    ],
-                    'created_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                    'updated_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                ]
-            ]
-        ],
-        'seat4_passenger' => [
-            'settings' => [
-                'number_of_shards' => 1,
-                'number_of_replicas' => 0,
-                'index.mapping.ignore_malformed' => false,
-                "analysis" => [
-                    "filter" => [],
-                    "analyzer" => []
-                ]
-            ],
-            'mappings' => [
-                'properties' => [
-                    'first_name' => [
-                        'type' => 'keyword'
-                    ],
-                    'last_name' => [
-                        'type' => 'keyword'
-                    ],
-                    'phone_number' => [
-                        'type' => 'keyword'
-                    ],
-                    'country' => [
-                        'type' => 'keyword'
-                    ],
-                    'enabled' => [
-                        'type' => 'boolean'
-                    ],
-                    'verified' => [
-                        'type' => 'boolean'
-                    ],
-                    'created_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                    'updated_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                ]
-            ]
-        ],
-        'seat4_driver' => [
-            'settings' => [
-                'number_of_shards' => 1,
-                'number_of_replicas' => 0,
-                'index.mapping.ignore_malformed' => false,
-                "analysis" => [
-                    "filter" => [],
-                    "analyzer" => []
-                ]
-            ],
-            'mappings' => [
-                'properties' => [
-                    'number' => [
-                        'type' => 'keyword'
-                    ],
-                    'first_name' => [
-                        'type' => 'keyword'
-                    ],
-                    'last_name' => [
-                        'type' => 'keyword'
-                    ],
-                    'phone_number' => [
-                        'type' => 'keyword'
-                    ],
-                    'country' => [
-                        'type' => 'keyword'
-                    ],
-                    'enabled' => [
-                        'type' => 'boolean'
-                    ],
-                    'verified' => [
-                        'type' => 'boolean'
-                    ],
-                    'created_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                    'updated_at' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                ]
-            ]
-        ],
-        'securitas_user_by_phone' => [
-            'settings' => [
-                'number_of_shards' => 1,
-                'number_of_replicas' => 0,
-                'index.mapping.ignore_malformed' => false,
-                "analysis" => [
-                    "filter" => [],
-                    "analyzer" => []
-                ]
-            ],
-            'mappings' => [
-                'properties' => [
-                    'phone_number' => [
                         'type' => 'keyword'
                     ],
                 ]

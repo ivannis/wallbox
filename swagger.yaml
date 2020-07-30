@@ -49,6 +49,35 @@ paths:
                 $ref: "#/components/schemas/ArrayOfUser"
         "400":
           $ref: '#/components/responses/BadRequest'
+  /users/import:
+    post:
+      summary: Import all users from the csv file.
+      description: ""
+      operationId: "importUsers"
+      tags:
+        - users
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  nullable: true
+                  example: 25
+                async:
+                  type: boolean
+                  nullable: true
+                delay:
+                  type: integer
+                  nullable: true
+      responses:
+        "200":
+          description: Ok
+        "400":
+          $ref: '#/components/responses/BadRequest'
 
 components:
   # Reusable schemas (data models)

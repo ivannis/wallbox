@@ -20,5 +20,6 @@ Router::addGroup('/v1',function () {
 
     Router::addGroup('/users',function () {
         Router::get('/', [UserController::class, 'index']);
+        Router::post('/import', [UserController::class, 'import']);
     });
 });

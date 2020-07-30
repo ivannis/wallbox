@@ -23,11 +23,15 @@ docker-compose up -d
 
 ## What's inside?
 
-Within the `src` directory, you can find the different services of the application
+Within the `src` directory, you can find the different contexts of the application
 
 ### [Common](/src/Common)
 
 Common utilities across all contexts
+
+### [Downloader](/src/Downloader)
+
+Context dedicated to download and import data from the CSV file  
 
 ### [Wallbox](/src/Wallbox)
 
@@ -63,8 +67,15 @@ Open the swagger editor url https://editor.swagger.io and paste the content with
 $ bin/behat
 ```
 
+## Coverage
+```
+$ bin/task coverage
+# now open runtine/coverage/html/index.html
+```
+
 # Performance
 
 ```
+$ npm install -g artillery
 $ artillery run ./benchmark/artillery.yml
 ```
