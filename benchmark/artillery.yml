@@ -1,0 +1,18 @@
+config:
+  target: "http://api.localhost"
+  processor: "./index.js"
+  phases:
+    - duration: 20
+      arrivalRate: 10
+
+scenarios:
+  - name: "Create driver load test"
+    flow:
+      - function: "driverFixtures"
+      - post:
+          url: "/graphql"
+          json:
+            query: "mutation{\n registerDriver(driverId: \"{{ uuid }}\", phoneNumber: \"{{ phone }}\", countryCode: \"ES\")\n}"
+            variables: {}
+
+            

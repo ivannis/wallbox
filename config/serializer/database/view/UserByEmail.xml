@@ -1,0 +1,9 @@
+<serializer>
+
+    <class name="Wallbox\Domain\View\UserByEmail">
+        <attribute name="id" serialized-name="id" type="Wallbox\Domain\UserId" />
+        <attribute name="externalId" serialized-name="externalId" type="integer" />
+        <attribute name="email" serialized-name="email" type="Doblio\Core\ValueObject\Web\EmailAddress" />
+    </class>
+
+</serializer>

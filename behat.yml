@@ -1,0 +1,16 @@
+default:
+    extensions:
+        Doblio\HyperfBridge\Testing\Behat\Extension:
+            bootstrap_path: 'test/Functional/bootstrap.php'
+            target_directory: 'runtime/coverage'
+
+    suites:
+        seat4:
+            coverage_enabled: true
+            paths: ['%paths.base%/test/Functional/Features']
+            contexts:
+                - Doblio\HyperfBridge\Testing\Behat\Context\DatabaseContext
+                - Doblio\HyperfBridge\Testing\Behat\Context\RestContext
+                - Doblio\HyperfBridge\Testing\Behat\Context\JsonContext
+                - Doblio\HyperfBridge\Testing\Behat\Context\GraphQLContext
+                - WallboxTest\Functional\Context\FeatureContext

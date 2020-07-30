@@ -1,0 +1,5 @@
+{
+  "gitlab-oauth": {
+    "gitlab.com": "generate a token at https://gitlab.com/profile/personal_access_tokens and put it here"
+  }
+}

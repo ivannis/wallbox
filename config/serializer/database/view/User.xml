@@ -1,0 +1,17 @@
+<serializer>
+
+    <class name="Wallbox\Domain\View\User">
+        <attribute name="id" serialized-name="id" type="Wallbox\Domain\UserId" />
+        <attribute name="externalId" serialized-name="externalId" type="integer" />
+        <attribute name="name" serialized-name="name" type="string" />
+        <attribute name="surname" serialized-name="surname" type="string" />
+        <attribute name="email" serialized-name="email" type="Doblio\Core\ValueObject\Web\EmailAddress" />
+        <attribute name="country" serialized-name="country" type="Doblio\Core\ValueObject\Geography\CountryCode" />
+        <attribute name="chargerId" serialized-name="chargerId" type="integer" />
+
+        <attribute name="createdAt" serialized-name="createdAt" type="Doblio\Core\ValueObject\DateTime\DateTime" />
+        <attribute name="updatedAt" serialized-name="updatedAt" type="Doblio\Core\ValueObject\DateTime\DateTime" />
+        <attribute name="activatedAt" serialized-name="activatedAt" type="Doblio\Core\ValueObject\DateTime\DateTime" />
+    </class>
+
+</serializer>

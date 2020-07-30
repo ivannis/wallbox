@@ -1,0 +1,118 @@
+version: '3.2'
+
+services:
+  traefik:
+    container_name: wallbox-traefik
+    image: traefik:v2.0
+    restart: on-failure
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --log.level=DEBUG
+      - --api.insecure=true
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_webgateway
+      - traefik.http.routers.traefik.entrypoints=web
+      - traefik.http.routers.traefik.rule=Host(`traefik.localhost`)
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - internal
+      - traefik_webgateway
+
+  redis:
+    container_name: wallbox-redis
+    image: redis:latest
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    networks:
+      - internal
+
+  mysql:
+    container_name: wallbox-mysql
+    image: mysql:latest
+    command:
+      - mysqld
+      - --max_connections=2213
+    environment:
+      MYSQL_DATABASES: ${DB_NAME},${DB_NAME}_test
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:3306
+    volumes:
+      - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+      - ./docker/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - internal
+
+  rabbitmq:
+    container_name: wallbox-rabbitmq
+    image: rabbitmq:3.8-management
+    hostname: rabbitmq
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_webgateway
+      - traefik.http.routers.rabbitmq.rule=Host(`rabbitmq.localhost`)
+      - traefik.http.services.rabbitmq.loadbalancer.server.port=15672
+    environment:
+      RABBITMQ_ERLANG_COOKIE: ${RABBITMQ_COOKIE}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_VHOST}
+    volumes:
+      - ${DATA_PATH_HOST}/rabbitmq/data:/var/lib/rabbitmq
+      - ${DATA_PATH_HOST}/rabbitmq/logs:/var/log/rabbitmq
+    networks:
+      - internal
+      - traefik_webgateway
+
+  wallbox:
+    container_name: wallbox
+    command: php -S 127.0.0.1:13300
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.dev
+      args:
+        - TIMEZONE=UTC
+        - PORT=9501
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_webgateway
+      - traefik.http.routers.wallbox.rule=Host(`api.localhost`)
+      - traefik.http.services.wallbox.loadbalancer.server.port=9501
+    environment:
+      REDIS_HOST: redis
+      RABBITMQ_HOST: rabbitmq
+      DB_HOST: mysql
+      ES_HOST: elastic
+    depends_on:
+      - redis
+      - rabbitmq
+      - mysql
+    privileged: true
+    volumes:
+      - .:/var/www/app
+    networks:
+      - internal
+      - traefik_webgateway
+
+networks:
+  internal:
+    external: false
+  traefik_webgateway:
+    external: true
+
+volumes:
+  redis:
+    driver: ${VOLUMES_DRIVER}
+  rabbitmq:
+    driver: ${VOLUMES_DRIVER}
+  mysql:
+    driver: ${VOLUMES_DRIVER}

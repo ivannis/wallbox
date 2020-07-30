@@ -1,0 +1,190 @@
+openapi: 3.0.0
+info:
+  title: Wallbox API
+  version: 1.0.0
+
+servers:
+  - url: http://api.localhost/v1
+    description: Local server for testing
+  - url: http://staging.wallbox.com/v1
+    description: Internal staging server for testing
+  - url: http://api.wallbox.com/v1
+    description: Production server
+
+tags:
+  - name: users
+    description: Operations about user.
+
+paths:
+  /users:
+    get:
+      summary: List all users in the system.
+      description: ""
+      operationId: "users"
+      tags:
+        - users
+      parameters:
+        - in: query
+          name: activation_length
+          schema:
+            type: integer
+            example: 5
+          required: false
+          description: Number of days between user registration and activation date
+        - in: query
+          name: countries
+          description: Users that were registered in the country list
+          required: false
+          schema:
+            type: array
+            example: ["ES", "CN"]
+            items:
+              type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArrayOfUser"
+        "400":
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  # Reusable schemas (data models)
+  schemas:
+    UUID:
+      type: string
+      format: UUID
+      example: 214b0f77-2037-4fa3-be8a-c4570687c785
+    email:
+      type: string
+      format: email
+      example: "nfrazierkj@uol.com.br"
+    countryCode:
+      type: string
+      enum:
+        - ES
+        - CN
+    User:
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        externalId:
+          type: integer
+          example: 740
+        name:
+          type: string
+          example: Nancy
+        surname:
+          type: string
+          example: Frazier
+        email:
+          $ref: '#/components/schemas/email'
+        country:
+          $ref: '#/components/schemas/countryCode'
+        chargerId:
+          type: integer
+          example: 740
+        createdAt:
+          type: string
+          format: date-time
+          example: 20151201
+        activateAt:
+          type: string
+          format: date-time
+          example: 20151203
+    ArrayOfUser:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+  # Reusable responses, such as 401 Unauthorized or 400 Bad Request
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 404
+              message:
+                type: string
+                example: "Not found"
+              reason:
+                type: string
+                example: NOT_FOUND
+            required:
+              - code
+              - message
+              - reason
+
+    UnprocessableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 422
+              message:
+                type: string
+                example: "Unprocessable entity"
+              reason:
+                type: string
+                example: UNPROCESSABLE_ENTITY
+            required:
+              - code
+              - message
+              - reason
+
+    BadRequest:
+      description: Invalid arguments
+      content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: number
+                example: 400
+              message:
+                type: string
+                example: "Bad request"
+              errors:
+                type: array
+                description: Multiple errors formatted as key => value
+                example:
+                  - { country: "Invalid country" }
+              reason:
+                type: string
+                example: BAD_REQUEST
+            required:
+              - code
+              - message
+              - reason
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: number
+                example: 401
+              message:
+                type: string
+                example: "Unauthorized"
+              reason:
+                type: string
+                example: UNAUTHORIZED
+            required:
+              - code
+              - message
+              - reason

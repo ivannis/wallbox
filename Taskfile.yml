@@ -1,0 +1,52 @@
+# https://taskfile.org
+---
+version: '2'
+
+tasks:
+  make:
+    cmds:
+      - cp .env.example .env
+      - cp composer-auth.json.example composer-auth.json
+      - docker-compose build
+      - docker network create traefik_webgateway
+      - docker-compose up -d
+
+  test:
+    cmds:
+      - bin/co-phpunit -c phpunit.xml
+
+  behat:
+    cmds:
+      - bin/behat --colors
+    ignore_error: true
+
+  coverage:
+    cmds:
+      - bin/cov merge runtime/coverage --html runtime/coverage/html
+      - cp test/Resource/coverage.css runtime/coverage/html/_css/custom.css
+      - cp test/Resource/logo.svg runtime/coverage/html
+
+  hyperf:
+    cmds:
+      - php bin/hyperf.php start
+
+  migrate:
+    cmds:
+      - php bin/hyperf.php migrate:fresh --database=default --path=migrations
+    ignore_error: true
+
+  exec:
+    cmds:
+      - docker exec -it wallbox-api sh
+
+  up:
+    cmds:
+      - docker-compose up -d
+
+  down:
+    cmds:
+      - docker-compose up -d
+
+  build:
+    cmds:
+      - docker-compose build
