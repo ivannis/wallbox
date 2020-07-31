@@ -1,0 +1,10 @@
+<serializer>
+
+    <class name="Downloader\Command\DownloadCSVFile">
+        <attribute name="url" serialized-name="url" type="string" />
+        <attribute name="limit" serialized-name="limit" type="integer" />
+        <attribute name="async" serialized-name="async" type="bool" />
+        <attribute name="delay" serialized-name="delay" type="integer" />
+    </class>
+
+</serializer>

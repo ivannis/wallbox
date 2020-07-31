@@ -82,9 +82,75 @@ $ bin/task coverage
 # now open runtine/coverage/html/index.html
 ```
 
+# How to scale
+
+In the production environment we are not going to use docker-compose to deploy the system. We are going to use [terraform](https://www.terraform.io/) to create the infrastructure and [nomad](https://www.nomadproject.io/) as deployment orchestrator.
+
+To test the scalability of the system in development, we can simply do the following:
+
+```
+$ docker-compose down
+```
+
+Now you can comment the line#77 on the `docker-compose.yml` file
+
+```
+  wallbox:
+#    container_name: wallbox
+    command: php -S 127.0.0.1:13300
+    build:
+  ...
+```
+
+Run the following command:
+
+```
+$ docker-compose up -d --scale wallbox=3
+$ docker-compose ps
+```
+
+## Start 3 servers
+
+Open terminal 1:
+```
+docker exec -it wallbox_wallbox_1 sh
+php bin/hyperf.php start
+# press CTRL + C to terminate the current process
+```
+
+Open terminal 2:
+```
+docker exec -it wallbox_wallbox_2 sh
+php bin/hyperf.php start
+# press CTRL + C to terminate the current process
+```
+
+Open terminal 3:
+```
+docker exec -it wallbox_wallbox_3 sh
+php bin/hyperf.php start
+# press CTRL + C to terminate the current process
+```
+
+Now you can perform a request to the API to see how the servers will balance the workload.
+
+Open terminal 4:
+```
+curl --location --request GET 'http://api.localhost/v1/users/' \
+--header 'Content-Type: application/json' \
+--data-raw ''
+```
+
 # Performance
 
 ```
 $ npm install -g artillery
 $ artillery run ./benchmark/artillery.yml
 ```
+
+# TODO
+- Add units and functional tests (coming soon)
+- Return paginated user list
+- Add a cron job to import users every X hours
+- Create a pipeline for a continuous integration system
+- Create a deployment configuration
