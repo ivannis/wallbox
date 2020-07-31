@@ -62,15 +62,28 @@ class DownloaderCommandHandler
      */
     public function loadBatchFromCSV(LoadBatchFromCSV $command)
     {
-        $context = array_merge([
-            'from' => $command->offset(),
-            'to' => ($command->offset() + $command->limit() - 1)
-        ], $this->loggerContext);
+        $this->logger->info(
+            'Loading users from {from} to {to} ...',
+            array_merge([
+                'from' => $command->offset(),
+                'to' => ($command->offset() + $command->limit() - 1)
+            ], $this->loggerContext)
+        );
 
-        $this->logger->info('Loading users from {from} to {to} ...', $context);
+        if (!file_exists($command->file())) {
+            $this->logger->error(
+                "CSV file {fileName} doesn't exists.",
+                array_merge([
+                    'fileName' => $command->file(),
+                ], $this->loggerContext)
+            );
+
+            return;
+        }
+
         $csv = Reader::createFromPath($command->file(), 'r');
-
         $header = ['id', 'name', 'surname', 'email', 'country', 'createAt', 'activateAt', 'chargerId'];
+
         $stmt = (new Statement())
             ->offset($command->offset())
             ->limit($command->limit())
@@ -120,7 +133,7 @@ class DownloaderCommandHandler
                             (int) $record['chargerId'],
                             $record['createAt'],
                             $record['activateAt'],
-                            );
+                        );
                     }
                 } catch (Exception $e) {
                     $context = array_merge([

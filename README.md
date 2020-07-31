@@ -55,6 +55,15 @@ php bin/hyperf.php start
 # press CTRL + C to terminate the current process
 ```
 
+## Import users
+
+Open another terminal and type the following:
+
+```
+docker exec -it wallbox sh
+php bin/hyperf.php import:users
+```
+
 You can now use API at the endpoint: `http://api.localhost/v1`.
 
 # Documentation
