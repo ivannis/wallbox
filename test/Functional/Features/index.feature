@@ -1,7 +1,7 @@
 Feature: Index
-  In order to use the wallbox api
-  As a wallbox user
-  I want to be able to ....
+  In order to use the wallbox API
+  As an anonymous user
+  I want to be able to see the API version
 
   Scenario: test
     Given I add "Content-Type" header equal to "application/json"

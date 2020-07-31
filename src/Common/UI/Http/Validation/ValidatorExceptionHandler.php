@@ -34,7 +34,7 @@ class ValidatorExceptionHandler extends ExceptionHandler
 
         return $response
             ->withStatus(400)
-            ->withAddedHeader('content-type', 'application/json; charset=utf-8')
+            ->withAddedHeader('content-type', 'application/json;')
             ->withBody(new SwooleStream(json_encode($body)))
         ;
     }

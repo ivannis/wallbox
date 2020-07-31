@@ -80,12 +80,12 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/doblio/framework.git",
-                "reference": "186fb752d411efd0ff5278bd5701ab8e87b46820"
+                "reference": "a1713171b55aba95462d886be601d83c99d4205b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/doblio%2Fframework/repository/archive.zip?sha=186fb752d411efd0ff5278bd5701ab8e87b46820",
-                "reference": "186fb752d411efd0ff5278bd5701ab8e87b46820",
+                "url": "https://gitlab.com/api/v4/projects/doblio%2Fframework/repository/archive.zip?sha=a1713171b55aba95462d886be601d83c99d4205b",
+                "reference": "a1713171b55aba95462d886be601d83c99d4205b",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,7 @@
                 "ddd",
                 "infrastructure"
             ],
-            "time": "2020-07-28T16:15:53+00:00"
+            "time": "2020-07-31T19:05:07+00:00"
         },
         {
             "name": "doblio/hyperf-bridge",
@@ -140,12 +140,12 @@
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/doblio/hyperf-bridge.git",
-                "reference": "22b2cbad31f6a4288341411399dc5cf6c8286bf0"
+                "reference": "ee883c4f9d5f9f4f18a0ddc0407f2deeab4854a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/doblio%2Fhyperf-bridge/repository/archive.zip?sha=22b2cbad31f6a4288341411399dc5cf6c8286bf0",
-                "reference": "22b2cbad31f6a4288341411399dc5cf6c8286bf0",
+                "url": "https://gitlab.com/api/v4/projects/doblio%2Fhyperf-bridge/repository/archive.zip?sha=ee883c4f9d5f9f4f18a0ddc0407f2deeab4854a8",
+                "reference": "ee883c4f9d5f9f4f18a0ddc0407f2deeab4854a8",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                 "hyperf",
                 "php"
             ],
-            "time": "2020-07-24T18:34:58+00:00"
+            "time": "2020-07-31T19:04:45+00:00"
         },
         {
             "name": "doblio/hyperf-elasticsearch",

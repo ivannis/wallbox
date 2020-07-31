@@ -14,3 +14,4 @@ default:
                 - Doblio\HyperfBridge\Testing\Behat\Context\JsonContext
                 - Doblio\HyperfBridge\Testing\Behat\Context\GraphQLContext
                 - WallboxTest\Functional\Context\FeatureContext
+                - WallboxTest\Functional\Context\UserContext
