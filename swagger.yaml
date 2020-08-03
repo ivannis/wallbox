@@ -36,10 +36,8 @@ paths:
           description: Users that were registered in the country list
           required: false
           schema:
-            type: array
-            example: ["ES", "CN"]
-            items:
-              type: string
+            type: string
+            example: "ES,CN"
       responses:
         "200":
           description: Ok
