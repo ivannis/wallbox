@@ -8,12 +8,11 @@ blocks:
   - name: Talk to K8s
     task:
       jobs:
-        - name: Get nodes
+        - name: Get pods
           commands:
             - checkout
-            - kubectl get nodes
+            - echo "$KUBERNETES_CLUSTER_CERTIFICATE" | base64 --decode > cert.crt
+            - kubectl --kubeconfig=/dev/null --server=$KUBERNETES_SERVER --certificate-authority=cert.crt --token=$KUBERNETES_TOKEN get pods
       secrets:
         - name: do-k8s
-      env_vars:
-        - name: KUBECONFIG
-          value: /home/semaphore/.kube/dok8s.yml
+      env_vars: []
