@@ -5,9 +5,15 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: 'Block #1'
+  - name: Talk to K8s
     task:
       jobs:
-        - name: 'Job #1'
+        - name: Get nodes
           commands:
             - checkout
+            - kubectl get nodes
+      secrets:
+        - name: do-k8s
+      env_vars:
+        - name: KUBECONFIG
+          value: /home/semaphore/.kube/dok8s.yml
